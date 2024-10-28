@@ -1,0 +1,58 @@
+フロントエンド
+viteを利用
+viteは高速なビルドツール
+npm create viteでReactとtypeScriptを選択する
+npm installを行う　packageを追加したときなどにも行う？
+npm run dev:
+o+Enterで実行 q+Enterで停止
+
+Reactのルーティング
+npm install react-router-dom@latest
+
+componentsとconfigsのフォルダを真似して作成　App.tsxも書き換える
+
+materialUI
+npm install @emotion/react@latest
+npm install @emotion/styled@latest
+npm install @mui/material@latest
+------------------------------------------------------------
+バックエンド
+python -m venv venvで仮想環境を作成
+.\venv\Scripts\activate
+
+フレームワークのインストール
+
+・(venv) pip install Django
+
+DjangoでRESTfulなAPIを作るための定番ライブラリ
+・(venv) pip install djangorestframework　
+
+クロスオリジン問題を解決するためのライブラリ
+・(venv) pip install django-cors-headers
+
+Django自体の環境設定
+・django-admin startproject プロジェクト名 .
+
+manage.pyファイルはdjangoにあらかじめ備わっている機能を実行する際に使われる
+・python manage.py startapp "アプリ名"
+  settings.pyのINSTALLED_APPSに追加し、アプリを認識させる
+  クロスオリジン問題のためにMIDDLEWAREの設定を変更し、CORS_ORIGIN_WHITELISTも追加
+
+・python manage.py migrate
+・htmlファイルが入っている場所をsettings.pyで伝える（p99参照)
+
+サーバーの立ち上げ
+・python manage.py runserver　
+
+マイグレーション
+python manage.py makemigrations "アプリ名(省略するとすべてのアプリに実行する)"
+を実行すると、モデル(model.py)に変更があれば、その変更をmigrationsディレクトリに新たにファイルを追加し記録する。
+その後
+python manage.py migrateを実行しデータベースにその変更を反映させる
+
+model.pyの編集
+admin.pyを編集することで作成したモデルを管理画面に反映させることができる
+
+・python manage.py createsuperuser
+でユーザ作成　Username:takeda Password:akitomoで作成
+
