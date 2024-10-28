@@ -1,12 +1,21 @@
-import { Button, Checkbox, FormControlLabel, FormGroup } from '@mui/material';
+import { Button, Checkbox, FormControlLabel, FormGroup, colors } from '@mui/material';
 import { Box } from '@mui/material';
 import Container from '@mui/material/Container';
 import TextField from '@mui/material/TextField';
 import { getToDoList, getToDoList2, postCreateTodo, patchCheckTodo, deleteTodo } from '../api/todo_api';
 import { useState, useEffect } from 'react';
+import { Unity, useUnityContext } from "react-unity-webgl";
+import { red } from '@mui/material/colors';
 
 const Top = () => {
 
+    const { unityProvider, sendMessage} = useUnityContext({//unityのビルドファイルから必要なファイルとってくる
+        loaderUrl: "UnityBuild/Downloads.loader.js",
+        dataUrl: "UnityBuild/webgl.data",
+        frameworkUrl: "UnityBuild/build.framework.js",
+        codeUrl: "UnityBuild/build.wasm",
+    });
+    
     const [todoList, setTodoList] = useState<Todo[]>([])
     const [todoName, setTodoName] = useState("")
 
@@ -57,31 +66,50 @@ const Top = () => {
         await deleteTodo(todoId);
     }
 
-
+    const moveRight = () => {
+        sendMessage("Sphere", "MoveRight", 1);
+    }
+        
 
     return (
-        <Container maxWidth="xs">
-            Hello World!
-            <Box display="flex" justifyContent="space-between" mt={4} mb={4}>
-                <TextField label="やること" variant="outlined" size="small" value={todoName} onChange={handleSetTodo}/>
-                <Button variant="contained" color="primary" onClick={handleCreate}>作成</Button>
-            </Box>
-            <FormGroup>
-                {todoList.map((todo, index)=>{
-                    return(
-                        <Box key={index} display="flex" justifyContent="space-between" mb={1}>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox value={todo.id} onChange={handleCheck} checked={todo.checked ? true : false}/>
-                                }
-                                label={todo.name}
-                            />
-                            <Button variant="outlined" data-id={todo.id} onClick={() => handleDelete(todo.id)}>削除</Button>
-                        </Box>
-                    )
-                })}
-            </FormGroup>
-        </Container>
+        <div style={{
+            display: "flex",
+            flexDirection: "column",  // 縦に並べる
+            alignItems: "center",
+            height: "100vh",
+            gap: "20px",  // 要素間の間隔
+        }}>
+            <Unity unityProvider={unityProvider}  
+                style={{
+                    height: "100%",
+                    width: "100%",
+                }}
+                
+            />
+            <Button onClick={moveRight}>R</Button>
+            <Container maxWidth="xs">
+                Hello World!
+                <Box display="flex" justifyContent="space-between" mt={4} mb={4}>
+                    <TextField label="やること" variant="outlined" size="small" value={todoName} onChange={handleSetTodo}/>
+                    <Button variant="contained" color="primary" onClick={handleCreate}>作成</Button>
+                </Box>
+                <FormGroup>
+                    {todoList.map((todo, index)=>{
+                        return(
+                            <Box key={index} display="flex" justifyContent="space-between" mb={1}>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox value={todo.id} onChange={handleCheck} checked={todo.checked ? true : false}/>
+                                    }
+                                    label={todo.name}
+                                />
+                                <Button variant="outlined" data-id={todo.id} onClick={() => handleDelete(todo.id)}>削除</Button>
+                            </Box>
+                        )
+                    })}
+                </FormGroup>
+            </Container>
+        </div>
     )
 };
 export default Top;
